@@ -6,5 +6,6 @@
         public const string TaskUpdated = "Task updated successfully.";
         public const string TaskDeleted = "Task deleted successfully.";
         public const string TitleTooLong = "Title cannot exceed {0} characters.";
+        public const string GlobalError = "An error occurred while processing your request.";
     }
 }

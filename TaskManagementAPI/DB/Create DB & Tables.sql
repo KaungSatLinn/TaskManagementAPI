@@ -52,4 +52,6 @@ VALUES
     ('Attend Industry Conference', 'Network with potential clients and partners', 3, '2024-08-28', 1),
     ('Analyze Sales Data', 'Identify trends and areas for improvement', 2, '2024-07-12', 3);   
 
+ALTER TABLE Tasks
+ADD IsDelete INT NOT NULL DEFAULT 0; 
 
