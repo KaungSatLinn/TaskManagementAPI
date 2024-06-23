@@ -1,7 +1,8 @@
 $(document).ready(function () {
 
-    // Base URL for your API
-    const apiUrl = 'https://localhost:7063/api/tasks'; // Replace with your actual API URL
+    const apiUrl = 'https://localhost:7063/api/tasks';
+    var editPriorityId = 0;
+    var editStatusId = 0;
 
     // Load content into the specified div
     loadPage();
@@ -13,12 +14,13 @@ $(document).ready(function () {
         }
         if (window.location.pathname.endsWith('create.html')) {
             createValidationForm();
-            loadTaskPriorities();
-            loadTaskStatuses();
+            loadTaskPriorities("CREATE");
+            loadTaskStatuses("CREATE");
             $('#dueDate').datetimepicker({
-                format: 'L'
+                format: 'YYYY-MM-DD',
+                date: new Date()
             });
-            
+
         }
         if (window.location.pathname.endsWith('edit.html')) {
             // Code for edit.html
@@ -26,12 +28,12 @@ $(document).ready(function () {
             const taskId = urlParams.get('taskId');
             if (taskId) {
                 loadTaskDetails(taskId);
-                loadTaskPriorities();
-                loadTaskStatuses();
+                loadTaskPriorities("EDIT");
+                loadTaskStatuses("EDIT");
                 editValidationForm();
             }
             $('#dueDate').datetimepicker({
-                format: 'L'
+                format: 'YYYY-MM-DD'
             });
         }
 
@@ -44,7 +46,7 @@ $(document).ready(function () {
         });
     }
 
-    function loadTaskPriorities() {
+    function loadTaskPriorities(action) {
         $.ajax({
             url: `${apiUrl}/priorities`,
             type: 'GET',
@@ -60,6 +62,9 @@ $(document).ready(function () {
                         }
                     })
                 });
+                if(action =="EDIT"){
+                    $('#prioritySelect2').val(editPriorityId).trigger('change');
+                }
             },
             error: function () {
                 alert("Error loading Priorities!");
@@ -67,7 +72,7 @@ $(document).ready(function () {
         });
     }
 
-    function loadTaskStatuses() {
+    function loadTaskStatuses(action) {
         $.ajax({
             url: `${apiUrl}/statuses`,
             type: 'GET',
@@ -83,6 +88,9 @@ $(document).ready(function () {
                         }
                     })
                 });
+                if(action =="EDIT"){
+                    $('#statusSelect2').val(editStatusId).trigger('change');
+                }
             },
             error: function () {
                 alert("Error loading Statuses!");
@@ -133,16 +141,16 @@ $(document).ready(function () {
                     .columns([3, 5])
                     .every(function () {
                         var column = this;
-         
+
                         // Create select element and listener
                         var select = $('<select><option value="">All</option></select>')
                             .appendTo($(column.footer()).empty())
                             .on('change', function () {
                                 column
-                                    .search($(this).val(), {exact: true})
+                                    .search($(this).val(), { exact: true })
                                     .draw();
                             });
-         
+
                         // Add list of options
                         column
                             .data()
@@ -188,7 +196,11 @@ $(document).ready(function () {
                 $('#taskId').val(task.taskId);
                 $('#title').val(task.title);
                 $('#description').val(task.description);
-                // ... set values for priority and status (you might need dropdowns)
+                editPriorityId = task.priorityId;
+                editStatusId = task.statusId;
+                $('#prioritySelect2').val(task.priorityId).trigger('change');
+                $('#statusSelect2').val(task.statusId).trigger('change');
+                $('#dueDate').datetimepicker("date", task.dueDate);
             },
             error: function () {
                 alert("Error loading task details!");
@@ -198,10 +210,20 @@ $(document).ready(function () {
 
     function saveTaskChanges() {
         const taskId = $('#taskId').val();
+        let priorityId = $('#prioritySelect2').val();
+        if(priorityId == ''){
+            priorityId = null;
+        }
+        let statusId = $('#statusSelect2').val();
+        if(statusId == ''){
+            statusId = null;
+        }
         const updatedTask = {
             title: $('#title').val(),
             description: $('#description').val(),
-            // ... priorityId and statusId (get values from dropdowns)
+            priorityId: priorityId,
+            statusId: statusId,
+            dueDate: $('#dueDate').datetimepicker("viewDate").format("YYYY-MM-DD")
         };
 
         $.ajax({
@@ -252,14 +274,24 @@ $(document).ready(function () {
     }
 
     function saveTask() {
+        let priorityId = $('#prioritySelect2').val();
+        if(priorityId == ''){
+            priorityId = null;
+        }
+        let statusId = $('#statusSelect2').val();
+        if(statusId == ''){
+            statusId = null;
+        }
         const createdTask = {
             title: $('#title').val(),
             description: $('#description').val(),
-            // ... priorityId and statusId (get values from dropdowns)
+            priorityId: priorityId,
+            statusId: statusId,
+            dueDate: $('#dueDate').datetimepicker("viewDate").format("YYYY-MM-DD")
         };
 
         $.ajax({
-            url: `${apiUrl}`,
+            url: `${apiUrl}/create`,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(createdTask),
@@ -268,7 +300,7 @@ $(document).ready(function () {
                 window.location.href = 'index.html'; // Redirect back to the list page
             },
             error: function () {
-                alert("Error updating task!");
+                alert("Error creating task!");
             }
         });
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TaskManagementAPI.Dtos;
 using TaskManagementAPI.Helper;
+using TaskManagementAPI.Models;
 using TaskManagementAPI.Services;
 
 namespace TaskManagementAPI.Controllers
@@ -27,14 +28,14 @@ namespace TaskManagementAPI.Controllers
         }
 
         [HttpGet("priorities")]
-        public async Task<ActionResult<List<TaskDto>>> GetTaskPriorities()
+        public async Task<ActionResult<List<TaskPriorities>>> GetTaskPriorities()
         {
             var priorities = await _taskService.GetTaskPriorities();
             return Ok(priorities);
         }
 
         [HttpGet("statuses")]
-        public async Task<ActionResult<List<TaskDto>>> GetTaskStatuses()
+        public async Task<ActionResult<List<TaskStatuses>>> GetTaskStatuses()
         {
             var statuses = await _taskService.GetTaskStatuses();
             return Ok(statuses);
@@ -42,7 +43,7 @@ namespace TaskManagementAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<TaskDto>> GetTaskByIdAsync(int id)
+        public async Task<ActionResult<UpdateTaskDto>> GetTaskByIdAsync(int id)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace TaskManagementAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<CreateTaskDto>> CreateTaskAsync(CreateTaskDto taskDto)
         {
             if (!ModelState.IsValid) // Checking the model state to ensure data integrity

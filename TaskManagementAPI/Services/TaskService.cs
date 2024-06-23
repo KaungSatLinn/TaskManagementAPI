@@ -26,8 +26,8 @@ namespace TaskManagementAPI.Services
                     Title = t.Title,
                     Description = t.Description,
                     DueDate = t.DueDate,
-                    PriorityName = t.TaskPriorities.PriorityName,
-                    StatusName = t.TaskStatuses.StatusName
+                    PriorityName = t.TaskPriorities.PriorityName ?? "",
+                    StatusName = t.TaskStatuses.StatusName ?? ""
                 })
                 .ToListAsync();
         }
@@ -46,7 +46,7 @@ namespace TaskManagementAPI.Services
 
         public async Task<UpdateTaskDto> GetTaskByIdAsync(int id)
         {
-            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x=>x.StatusId == id && x.IsDelete == 0);
+            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x=>x.TaskId == id && x.IsDelete == 0);
             if(task == null)
                 throw new ArgumentException("Task Not Found.");
             var taskdto = new UpdateTaskDto
@@ -87,7 +87,7 @@ namespace TaskManagementAPI.Services
 
         public async Task<Boolean> DeleteTaskAsync(int id)
         {
-            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.StatusId == id && x.IsDelete == 0);
+            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.TaskId == id && x.IsDelete == 0);
             if (task == null)
                 throw new ArgumentException("Task Not Found.");
             task.IsDelete = 1;
@@ -98,11 +98,14 @@ namespace TaskManagementAPI.Services
 
         public async Task<UpdateTaskDto> UpdateTaskAsync(int id, UpdateTaskDto taskDto)
         {
-            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.StatusId == id && x.IsDelete == 0);
+            var task = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.TaskId == id && x.IsDelete == 0);
             if (task == null)
                 throw new ArgumentException("Task Not Found.");
             task.Title = taskDto.Title;
             task.Description = taskDto.Description;
+            task.DueDate = taskDto.DueDate;
+            task.PriorityId = taskDto.PriorityId;
+            task.StatusId = taskDto.StatusId;
 
             await _dbContext.SaveChangesAsync();
             return new UpdateTaskDto
