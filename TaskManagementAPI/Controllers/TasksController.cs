@@ -59,7 +59,7 @@ namespace TaskManagementAPI.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<CreateTaskDto>> CreateTaskAsync(CreateTaskDto taskDto)
         {
-            if (!ModelState.IsValid) // Checking the model state to ensure data integrity
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -79,14 +79,18 @@ namespace TaskManagementAPI.Controllers
         [Route("{id}")]
         public async Task<ActionResult<TaskDto>> UpdateTaskAsync(int id, UpdateTaskDto taskDto)
         {
-            if (!ModelState.IsValid) // Checking the model state to ensure data integrity
+            if (!ModelState.IsValid)
             {
-                throw new ArgumentException(ModelState.ToString()); // or any other error message
+                return BadRequest(ModelState);
             }
             try
             {
                 var task = await _taskService.UpdateTaskAsync(id, taskDto);
                 return Ok(task);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -101,6 +105,10 @@ namespace TaskManagementAPI.Controllers
             {
                 var task = await _taskService.DeleteTaskAsync(id);
                 return Ok(task);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
