@@ -90,7 +90,7 @@
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a class="index-link">Task</a></li>
-                                    <li class="breadcrumb-item active">Create Task</li>
+                                    <li class="breadcrumb-item active">Task Detail</li>
                                 </ol>
                             </div>
                         </div>
@@ -106,26 +106,27 @@
                                 <!-- jquery validation -->
                                 <div class="card card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Create Task</h3>
+                                        <h3 class="card-title">Task Detail</h3>
                                     </div>
                                     <!-- /.card-header -->
                                     <!-- form start -->
-                                    <form id="createForm" class="create-validate-form">
+                                    
                                         <div class="card-body">
                                             <input type="hidden" id="taskId">
                                             <div class="form-group">
                                                 <label for="title">Title</label>
                                                 <input type="text" name="title" class="form-control" id="title"
-                                                    placeholder="Enter Title">
+                                                    placeholder="Enter Title" disabled>
                                             </div>
                                             <div class="form-group">
                                                 <label for="description">Description</label>
                                                 <textarea name="description" class="form-control" id="description"
-                                                    placeholder="Enter Description"></textarea>
+                                                    placeholder="Enter Description" disabled></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label>Priority</label>
-                                                <select class="form-control select2bs4" id="prioritySelect2" style="width: 100%;">
+                                                <select class="form-control select2bs4" id="prioritySelect2"
+                                                    style="width: 100%;" disabled>
                                                     <option></option>
                                                 </select>
                                             </div>
@@ -133,9 +134,9 @@
                                                 <label>Due Date</label>
                                                 <div class="input-group date" id="dueDate" data-target-input="nearest">
                                                     <input type="text" class="form-control datetimepicker-input"
-                                                        data-target="#dueDate" placeholder="Select Date Icon"/>
+                                                        data-target="#dueDate" placeholder="Select Date Icon" disabled/>
                                                     <div class="input-group-append" data-target="#dueDate"
-                                                        data-toggle="datetimepicker">
+                                                        data-toggle="datetimepicker" >
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i>
                                                         </div>
                                                     </div>
@@ -143,7 +144,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Status</label>
-                                                <select class="form-control select2bs4" id="statusSelect2" style="width: 100%;">
+                                                <select class="form-control select2bs4" id="statusSelect2"
+                                                    style="width: 100%;" disabled>
                                                     <option></option>
                                                 </select>
                                             </div>
@@ -151,9 +153,7 @@
                                         <!-- /.card-body -->
                                         <div class="card-footer">
                                             <a class="btn btn-secondary index-link">Back</a>
-                                            <button type="submit" class="btn btn-primary float-right">Save</button>
                                         </div>
-                                    </form>
                                 </div>
                                 <!-- /.card -->
                             </div>

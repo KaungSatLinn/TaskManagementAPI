@@ -94,7 +94,7 @@ namespace TaskManagementAPI.Controllers
             }
         }
 
-        [HttpPut("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<ActionResult<Boolean>> DeleteTaskAsync(int id)
         {
             try

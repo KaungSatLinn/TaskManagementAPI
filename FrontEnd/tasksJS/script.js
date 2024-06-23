@@ -36,6 +36,18 @@ $(document).ready(function () {
                 format: 'YYYY-MM-DD'
             });
         }
+        if (window.location.pathname.endsWith('detail.html')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskId = urlParams.get('taskId');
+            if (taskId) {
+                loadTaskDetails(taskId);
+                loadTaskPriorities("EDIT");
+                loadTaskStatuses("EDIT");
+            }
+            $('#dueDate').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+        }
 
         $('.index-link').each(function () {
             const url = `index.html`;
@@ -62,7 +74,7 @@ $(document).ready(function () {
                         }
                     })
                 });
-                if(action =="EDIT"){
+                if (action == "EDIT") {
                     $('#prioritySelect2').val(editPriorityId).trigger('change');
                 }
             },
@@ -88,7 +100,7 @@ $(document).ready(function () {
                         }
                     })
                 });
-                if(action =="EDIT"){
+                if (action == "EDIT") {
                     $('#statusSelect2').val(editStatusId).trigger('change');
                 }
             },
@@ -115,9 +127,15 @@ $(document).ready(function () {
                         <td>${task.dueDate}</td>
                         <td>${task.statusName}</td>
                         <td>
-                            <a href=${buildURL("EDIT", task.taskId)}>Edit</a> |
-                            <a href=${buildURL("DETAILS", task.taskId)}>Details</a> |
-                            <a href=${buildURL("DELETE", task.taskId)}>Delete</a>
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                                Action
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href=${buildURL("EDIT", task.taskId)} class="dropdown-item">Edit</a>
+                                <a href=${buildURL("DETAIL", task.taskId)} class="dropdown-item">Detail</a>
+                                <button type="button" class="dropdown-item btn-delete" data-taskId=${task.taskId} data-toggle="modal" data-target="#modal-default">
+                                    Delete</button>
+                            </div>
                         </td>
                     </tr>`;
                     taskList.append(row);
@@ -176,18 +194,12 @@ $(document).ready(function () {
         if (action == "EDIT") {
             return `edit.html?taskId=${taskId}`;
         }
-        if (action == "DETAILS") {
-            return `details.html?taskId=${taskId}`;
+        if (action == "DETAIL") {
+            return `detail.html?taskId=${taskId}`;
         }
         return `#`;
     }
-
-    // 2. Handle "Edit" button clicks on list page
-    $(document).on('click', '.btn-edit', function () {
-        const taskId = $(this).data('task-id');
-        window.location.href = `edit.html?taskId=${taskId}`;
-    });
-
+    
     function loadTaskDetails(taskId) {
         $.ajax({
             url: `${apiUrl}/${taskId}`,
@@ -211,11 +223,11 @@ $(document).ready(function () {
     function saveTaskChanges() {
         const taskId = $('#taskId').val();
         let priorityId = $('#prioritySelect2').val();
-        if(priorityId == ''){
+        if (priorityId == '') {
             priorityId = null;
         }
         let statusId = $('#statusSelect2').val();
-        if(statusId == ''){
+        if (statusId == '') {
             statusId = null;
         }
         const updatedTask = {
@@ -275,11 +287,11 @@ $(document).ready(function () {
 
     function saveTask() {
         let priorityId = $('#prioritySelect2').val();
-        if(priorityId == ''){
+        if (priorityId == '') {
             priorityId = null;
         }
         let statusId = $('#statusSelect2').val();
-        if(statusId == ''){
+        if (statusId == '') {
             statusId = null;
         }
         const createdTask = {
@@ -335,6 +347,28 @@ $(document).ready(function () {
             }
         });
     }
+
+    $(document).on('click', '.btn-delete', function() {
+        const taskId = $(this).data('taskid');
+        $('#taskId').val(taskId);
+    });
+
+    $(document).on('click', '#btnDeleteConfirm', function() {
+        const taskId = $('#taskId').val();
+        $('#modal-default').modal('hide');
+        $.ajax({
+            url: `${apiUrl}/delete/${taskId}`,
+            type: 'POST',
+            contentType: 'application/json',
+            success: function () {
+                alert("Task deleted successfully!");
+                window.location.href = 'index.html';
+            },
+            error: function () {
+                alert("Error deleting task!");
+            }
+        });
+    });
 });
 
 
