@@ -69,4 +69,4 @@ The following endpoints are available:
 ## Frontend Setup
 
 The frontend source code for this application is located in the [FrontEnd](FrontEnd) folder. 
-You can directly run the Index page at `FrontEnd/pages/tasks` after the API is run.
+You can directly run the Index page at [index.html]`FrontEnd/pages/tasks/index.html` after the API is run.
