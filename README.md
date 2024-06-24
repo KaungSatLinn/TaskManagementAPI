@@ -18,12 +18,6 @@ A simple RESTful API for managing tasks, built with ASP.NET Core using .NET 8.
 
 ### Installation & Setup
 
-1. Clone this repository: `git clone https://github.com/KaungSatLinn/TaskManagementAPI.git`
-2. Navigate to the project directory: `cd TaskManagementAPI`
-3. Restore dependencies: `dotnet restore`
-
-### Installation & Setup
-
 You can set up this project using either GitHub Desktop or Visual Studio 2022:
 
 #### Clone the Repository
@@ -71,3 +65,8 @@ The following endpoints are available:
 | `/api/tasks/{id}`         | GET         | Get a specific task by ID   |
 | `/api/tasks/{id}`         | PUT         | Update a task by ID         |
 | `/api/tasks/delete/{id}`  | POST        | Delete a task by ID         | 
+
+## Frontend Setup
+
+The frontend source code for this application is located in the [FrontEnd](FrontEnd) folder. 
+You can directly run the Index page at `FrontEnd/pages/tasks` after the API is run.
