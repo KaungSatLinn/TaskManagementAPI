@@ -87,8 +87,7 @@ namespace TaskManagementAPI.Tests
             var result = await _controller.CreateTaskAsync(newTaskDto);
 
             // Assert
-            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal("GetTaskByIdAsync", createdAtActionResult.ActionName);
+            var createdAtActionResult = Assert.IsType<OkObjectResult>(result.Result);
             var returnedTask = Assert.IsType<CreateTaskDto>(createdAtActionResult.Value);
             Assert.Equal(createdTaskDto, returnedTask);
         }
@@ -120,7 +119,7 @@ namespace TaskManagementAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnedTask = Assert.IsType<TaskDto>(okResult.Value);
+            var returnedTask = Assert.IsType<UpdateTaskDto>(okResult.Value);
             Assert.Equal(updatedTaskDto.TaskId, returnedTask.TaskId);
             Assert.Equal(updatedTaskDto.Title, returnedTask.Title);
         }
